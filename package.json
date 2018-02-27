@@ -1,0 +1,29 @@
+{
+  "name": "youtube_query",
+  "version": "0.0.1",
+  "description": "Script for searching videos by tag and save channel details",
+  "main": "index.js",
+  "dependencies": {
+    "googleapis": "^26.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node index.js 'Google'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruffiely/youtube_search_script.git"
+  },
+  "keywords": [
+    "youtube",
+    "data",
+    "api",
+    "indie"
+  ],
+  "author": "Thorben Rackow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ruffiely/youtube_search_script/issues"
+  },
+  "homepage": "https://github.com/ruffiely/youtube_search_script#readme"
+}
