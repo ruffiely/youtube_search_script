@@ -11,17 +11,26 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
 var TOKEN_PATH = TOKEN_DIR + 'youtube-nodejs-quickstart.json';
 var unique = {};
 
-// Load client secrets from a local file.
-fs.readFile('client_secret.json', function processClientSecrets(err, content) {
-    if (err) {
-        console.log('Error loading client secret file: ' + err);
-        return;
+fs.readFile('already_parsed', 'utf-8', function(err, content) {
+    if(content != undefined) {
+        unique = JSON.parse(content);
     }
-    // Authorize a client with the loaded credentials, then call the YouTube API.
-    for(var i = 2; i < process.argv.length; i++) {
-        authorize(JSON.parse(content), getChannelsByKeyword, process.argv[i]);
-    }
+    getNewGuys();
 });
+
+function getNewGuys() {
+    // Load client secrets from a local file.
+    fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+        if (err) {
+            console.log('Error loading client secret file: ' + err);
+            return;
+        }
+        // Authorize a client with the loaded credentials, then call the YouTube API.
+        for (var i = 2; i < process.argv.length; i++) {
+            authorize(JSON.parse(content), getChannelsByKeyword, process.argv[i]);
+        }
+    });
+}
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -120,11 +129,13 @@ function getChannel(id, auth) {
         if (channels.length == 0) {
             console.log('No channel found.');
         } else {
-            console.log('%s,%s,%s,%s',
-                channels[0].id,
-                channels[0].snippet.title,
-                channels[0].statistics.subscriberCount,
-                'https://www.youtube.com/channel/' + channels[0].id + '/about');
+            if(channels[0].snippet.description.match(/game/)) {
+                console.log('%s,%s,%s,%s',
+                    channels[0].id,
+                    channels[0].snippet.title,
+                    channels[0].statistics.subscriberCount,
+                    'https://www.youtube.com/channel/' + channels[0].id + '/about');
+            }
         }
     });
 }
@@ -159,6 +170,9 @@ function getNextChannels(auth, token, dupes) {
             return;
         }
         parseResponse(auth, response, dupes);
+        fs.writeFile("./already_parsed", JSON.stringify(unique), function(err) {
+            if(err) console.log(err);
+        })
     });
 }
 
